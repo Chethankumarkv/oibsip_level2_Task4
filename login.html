@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="login.css">
+
+</head>
+
+<body>
+
+    <form class="box" action="login.html" method="post">
+        <h1>
+            Login
+        </h1>
+        <input type="text" name="Name" placeholder="Enter User  name" id="userName" Required>
+        <input type="password" name="Password" placeholder="Enter Your Password" id="password">
+        <input type="submit" name="submit" value="Login" onclick="validateData()" id="submitLogin">
+        <h3> Don't have an account..?</h3>
+        <a href="signup.html" target="_self">Sign up</a>
+
+    </form>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
+
+    <script>
+       function decryptData(encryptedData, key) {
+    const decryptedBytes = CryptoJS.AES.decrypt(encryptedData, key);
+    return decryptedBytes.toString(CryptoJS.enc.Utf8);
+}
+
+const login = document.getElementById("submitLogin").addEventListener("click", function (event) {
+    event.preventDefault();
+    validateData();
+});
+
+function validateData() {
+    const userName = document.getElementById('userName').value;
+    const passWord = document.getElementById('password').value;
+    let user_records = JSON.parse(localStorage.getItem("users")) || [];
+
+    const user = user_records.find((v) => v.user === userName);
+
+    if (user && decryptData(user.password, 'your-secret-key') === passWord) {
+        alert("Login successful!!!");
+        localStorage.setItem("name", user.user);
+        localStorage.setItem("password", user.password);
+        window.location.href = "tributepage.html";
+    } else {
+        alert("Login failed");
+    }
+}
+
+
+    </script>
+</body>
+
+</html>
